@@ -331,8 +331,57 @@ a { text-decoration: none; color: inherit; }
   0%, 100% { transform: translate(0, 0) scale(1); }
   50% { transform: translate(38px, -32px) scale(1.06); }
 }
+@keyframes particleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-16px); }
+}
+@keyframes pulseRing {
+  0% { opacity: 0.55; transform: scale(0.9); }
+  100% { opacity: 0; transform: scale(2.4); }
+}
+@keyframes shineSweep {
+  0% { transform: translateX(-150%) skewX(-15deg); }
+  100% { transform: translateX(220%) skewX(-15deg); }
+}
+
+/* Floating hero particles */
+.hero-particle { position: absolute; border-radius: 50%; pointer-events: none; z-index: 1; animation: particleFloat 6s ease-in-out infinite; }
+.hero-particle.p1 { left: 8%; top: 22%; width: 7px; height: 7px; background: var(--gold-light); box-shadow: 0 0 10px 2px rgba(232,185,106,0.55); animation-delay: 0s; }
+.hero-particle.p2 { left: 42%; top: 12%; width: 5px; height: 5px; background: var(--gold); box-shadow: 0 0 8px 2px rgba(200,150,62,0.5); animation-delay: -1.5s; }
+.hero-particle.p3 { left: 68%; top: 30%; width: 6px; height: 6px; background: var(--military-lt); box-shadow: 0 0 8px 2px rgba(107,122,104,0.5); animation-delay: -3s; }
+.hero-particle.p4 { left: 20%; top: 62%; width: 4px; height: 4px; background: var(--gold-light); box-shadow: 0 0 6px 2px rgba(232,185,106,0.45); animation-delay: -2s; }
+.hero-particle.p5 { left: 85%; top: 55%; width: 6px; height: 6px; background: var(--gold); box-shadow: 0 0 9px 2px rgba(200,150,62,0.5); animation-delay: -4s; }
+.hero-particle.p6 { left: 55%; top: 78%; width: 5px; height: 5px; background: var(--military-lt); box-shadow: 0 0 7px 2px rgba(107,122,104,0.45); animation-delay: -0.8s; }
+@media (max-width: 768px) { .hero-particle { display: none; } }
+
+/* Pulse ring on trust badge dots */
+.badge-dot { position: relative; }
+.badge-dot::after { content: ''; position: absolute; inset: -3px; border-radius: 50%; border: 1.5px solid var(--gold); animation: pulseRing 2.4s ease-out infinite; }
+
+/* Shine sweep on primary gold buttons */
+.nav-cta, .cta-btn, .btn-next, .review-submit-btn { position: relative; overflow: hidden; }
+.nav-cta::after, .cta-btn::after, .btn-next::after, .review-submit-btn::after {
+  content: ''; position: absolute; top: 0; left: 0; width: 40%; height: 100%;
+  background: linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%);
+  transform: translateX(-150%) skewX(-15deg); pointer-events: none;
+}
+.nav-cta:hover::after, .cta-btn:hover::after, .btn-next:hover::after, .review-submit-btn:hover::after { animation: shineSweep 0.85s ease forwards; }
+
+/* Scroll-reveal entrance */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1); }
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+.pillar:nth-child(1), .product-card:nth-child(1), .testi-card:nth-child(1) { transition-delay: 0s; }
+.pillar:nth-child(2), .product-card:nth-child(2), .testi-card:nth-child(2) { transition-delay: 0.08s; }
+.pillar:nth-child(3), .product-card:nth-child(3), .testi-card:nth-child(3) { transition-delay: 0.16s; }
+.pillar:nth-child(4), .product-card:nth-child(4) { transition-delay: 0.24s; }
+.pillar:nth-child(5), .product-card:nth-child(5) { transition-delay: 0.32s; }
+.pillar:nth-child(6), .product-card:nth-child(6) { transition-delay: 0.4s; }
+
 @media (prefers-reduced-motion: reduce) {
-  .hero::before, .products-section::before, .cta-section::before { animation: none; }
+  .hero::before, .products-section::before, .cta-section::before,
+  .hero-particle, .badge-dot::after,
+  .nav-cta::after, .cta-btn::after, .btn-next::after, .review-submit-btn::after { animation: none !important; }
+  .reveal { transition: none !important; opacity: 1 !important; transform: none !important; }
 }
 .hero-content > * { animation: heroIn 0.9s ease both; }
 .hero-content > *:nth-child(1) { animation-delay: 0.1s; }
@@ -606,6 +655,7 @@ a { text-decoration: none; color: inherit; }
 
 <!-- HERO -->
 <section class="hero">
+  <span class="hero-particle p1"></span><span class="hero-particle p2"></span><span class="hero-particle p3"></span><span class="hero-particle p4"></span><span class="hero-particle p5"></span><span class="hero-particle p6"></span>
   <div class="hero-content">
     <div class="hero-label" data-i18n="heroLabel">Protecting Legacies. Empowering Futures.</div>
     <h1><span data-i18n="heroH1Part1">Build a legacy that</span> <em data-i18n="heroH1Part2">protects</em> <span data-i18n="heroH1Part3">what matters most.</span></h1>
@@ -824,12 +874,12 @@ a { text-decoration: none; color: inherit; }
   <h2 data-i18n="whyH2">More than insurance. A standard of <em style="font-style:italic;color:var(--gold)">care</em>.</h2>
   <p class="why-lead" data-i18n="whyLead">We pair top-rated carriers with personalized guidance, so your family's protection plan is built around your life — not a template.</p>
   <div class="pillars">
-    <div class="pillar"><div class="pillar-num">01</div><h3 data-i18n="pil1H">Independent & Unbiased</h3><p data-i18n="pil1P">We're not tied to a single carrier. We shop the market on your behalf to find the right fit at the right price.</p></div>
-    <div class="pillar"><div class="pillar-num">02</div><h3 data-i18n="pil2H">Personalized Coverage</h3><p data-i18n="pil2P">Every family is different. Your coverage plan reflects your goals, your budget, and your life stage.</p></div>
-    <div class="pillar"><div class="pillar-num">03</div><h3 data-i18n="pil3H">Top-Rated Carriers</h3><p data-i18n="pil3P">We partner exclusively with A and A+ rated carriers, ensuring long-term financial strength and reliability.</p></div>
-    <div class="pillar"><div class="pillar-num">04</div><h3 data-i18n="pil4H">Lifetime Support</h3><p data-i18n="pil4P">Your advisor stays with you for the long haul — through life changes, claims, and policy reviews.</p></div>
-    <div class="pillar"><div class="pillar-num">05</div><h3 data-i18n="pil5H">Transparent Pricing</h3><p data-i18n="pil5P">No hidden fees. No surprise rate hikes. Just honest quotes from trusted providers.</p></div>
-    <div class="pillar"><div class="pillar-num">06</div><h3 data-i18n="pil6H">Bilingual Service</h3><p data-i18n="pil6P">Our advisors serve clients in both English and Spanish, ensuring clear communication every step of the way.</p></div>
+    <div class="pillar reveal"><div class="pillar-num">01</div><h3 data-i18n="pil1H">Independent & Unbiased</h3><p data-i18n="pil1P">We're not tied to a single carrier. We shop the market on your behalf to find the right fit at the right price.</p></div>
+    <div class="pillar reveal"><div class="pillar-num">02</div><h3 data-i18n="pil2H">Personalized Coverage</h3><p data-i18n="pil2P">Every family is different. Your coverage plan reflects your goals, your budget, and your life stage.</p></div>
+    <div class="pillar reveal"><div class="pillar-num">03</div><h3 data-i18n="pil3H">Top-Rated Carriers</h3><p data-i18n="pil3P">We partner exclusively with A and A+ rated carriers, ensuring long-term financial strength and reliability.</p></div>
+    <div class="pillar reveal"><div class="pillar-num">04</div><h3 data-i18n="pil4H">Lifetime Support</h3><p data-i18n="pil4P">Your advisor stays with you for the long haul — through life changes, claims, and policy reviews.</p></div>
+    <div class="pillar reveal"><div class="pillar-num">05</div><h3 data-i18n="pil5H">Transparent Pricing</h3><p data-i18n="pil5P">No hidden fees. No surprise rate hikes. Just honest quotes from trusted providers.</p></div>
+    <div class="pillar reveal"><div class="pillar-num">06</div><h3 data-i18n="pil6H">Bilingual Service</h3><p data-i18n="pil6P">Our advisors serve clients in both English and Spanish, ensuring clear communication every step of the way.</p></div>
   </div>
 </section>
 
@@ -840,37 +890,37 @@ a { text-decoration: none; color: inherit; }
     <h2 data-i18n="prodH2">Protection plans built for <em style="font-style:italic;color:var(--gold-light)">real life</em>.</h2>
     <p class="why-lead" data-i18n="prodLead">From mortgage protection to retirement planning — we offer the right products to match every stage of your financial journey.</p>
     <div class="products-grid">
-      <div class="product-card">
+      <div class="product-card reveal">
         <div class="product-icon"><svg viewBox="0 0 24 24"><path d="M12 2 L4 6 L4 12 C4 17 8 21 12 22 C16 21 20 17 20 12 L20 6 Z"/></svg></div>
         <h3 data-i18n="card1H">Life Insurance</h3>
         <p data-i18n="card1P">Term, whole life, and universal coverage built around your family's long-term security.</p>
         <div class="product-tag" data-i18n="tagFromMonth">From $20/month</div>
       </div>
-      <div class="product-card">
+      <div class="product-card reveal">
         <div class="product-icon"><svg viewBox="0 0 24 24"><path d="M3 12 L12 3 L21 12 M5 10 V20 H19 V10"/></svg></div>
         <h3 data-i18n="card2H">Mortgage Protection</h3>
         <p data-i18n="card2P">Keep your family in their home — even if the unexpected happens to the primary earner.</p>
         <div class="product-tag" data-i18n="tagFamily">Family-Focused</div>
       </div>
-      <div class="product-card">
+      <div class="product-card reveal">
         <div class="product-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7 V13 L16 15"/></svg></div>
         <h3 data-i18n="card3H">IUL & Cash Value</h3>
         <p data-i18n="card3P">Indexed Universal Life policies that grow tax-advantaged while protecting your loved ones.</p>
         <div class="product-tag" data-i18n="tagWealth">Wealth Building</div>
       </div>
-      <div class="product-card">
+      <div class="product-card reveal">
         <div class="product-icon"><svg viewBox="0 0 24 24"><path d="M4 4 H20 V20 H4 Z M8 12 H16 M12 8 V16"/></svg></div>
         <h3 data-i18n="card4H">Health Insurance</h3>
         <p data-i18n="card4P">Affordable health plans from leading providers, tailored to individuals and families.</p>
         <div class="product-tag" data-i18n="tagAcc">Accessible Care</div>
       </div>
-      <div class="product-card">
+      <div class="product-card reveal">
         <div class="product-icon"><svg viewBox="0 0 24 24"><path d="M3 18 L9 12 L13 16 L21 6"/></svg></div>
         <h3 data-i18n="card5H">Retirement Planning</h3>
         <p data-i18n="card5P">Annuities, 401(k) rollovers, and IRAs designed to make your retirement years your best.</p>
         <div class="product-tag" data-i18n="tagFuture">Future-Ready</div>
       </div>
-      <div class="product-card" style="background:rgba(200,150,62,0.10);cursor:pointer" onclick="document.querySelector('.form-card').scrollIntoView({behavior:'smooth',block:'center'})">
+      <div class="product-card reveal" style="background:rgba(200,150,62,0.10);cursor:pointer" onclick="document.querySelector('.form-card').scrollIntoView({behavior:'smooth',block:'center'})">
         <div class="product-icon"><svg viewBox="0 0 24 24"><path d="M5 12 H19 M13 6 L19 12 L13 18"/></svg></div>
         <h3 data-i18n="cardCtaH">Not Sure Where to Start?</h3>
         <p data-i18n="cardCtaP">Tell us about your situation — we'll match you with the right coverage in minutes.</p>
@@ -885,7 +935,7 @@ a { text-decoration: none; color: inherit; }
   <div class="review-inner">
     <div class="section-label" data-i18n="revLabel">Free Policy Review</div>
     <div class="review-grid">
-      <div class="review-left">
+      <div class="review-left reveal">
         <h3 data-i18n="revH3">Already have a policy? Let's make sure it's still working for you.</h3>
         <p data-i18n="revP">Life changes — marriage, kids, new home, new income. Your coverage should keep up. We'll review your current policy at no cost and let you know if you're over-paying, under-protected, or perfectly placed.</p>
         <div class="review-points">
@@ -904,7 +954,7 @@ a { text-decoration: none; color: inherit; }
         </div>
       </div>
 
-      <div class="review-form-card">
+      <div class="review-form-card reveal">
         <div class="review-form-header">
           <h3 data-i18n="revFormH">Request a Free Policy Review</h3>
           <p data-i18n="revFormSub">Fill in your details below — we'll be in touch within 24 hours.</p>
@@ -957,7 +1007,7 @@ a { text-decoration: none; color: inherit; }
   <h2 data-i18n="testiH2">Families who trust Grand Valor.</h2>
   <p class="why-lead" data-i18n="testiLead">Real stories from clients across the country — the families whose futures we're proud to protect.</p>
   <div class="testi-grid">
-    <div class="testi-card">
+    <div class="testi-card reveal">
       <div class="testi-quote">"</div>
       <div class="stars">★★★★★</div>
       <p class="testi-text" data-i18n="testi1">"My advisor walked me through three different options and never pressured me. I ended up saving $80 a month and getting more coverage. Truly grateful."</p>
@@ -966,7 +1016,7 @@ a { text-decoration: none; color: inherit; }
         <div><div class="testi-name">Maria R.</div><div class="testi-detail" data-i18n="testi1Loc">Houston, TX · Mortgage Protection</div></div>
       </div>
     </div>
-    <div class="testi-card">
+    <div class="testi-card reveal">
       <div class="testi-quote">"</div>
       <div class="stars">★★★★★</div>
       <p class="testi-text" data-i18n="testi2">"After my husband passed, the Grand Valor team handled everything with such care. The claim was processed in days, not months. I'll never forget that."</p>
@@ -975,7 +1025,7 @@ a { text-decoration: none; color: inherit; }
         <div><div class="testi-name">Denise S.</div><div class="testi-detail" data-i18n="testi2Loc">Orlando, FL · Term Life</div></div>
       </div>
     </div>
-    <div class="testi-card">
+    <div class="testi-card reveal">
       <div class="testi-quote">"</div>
       <div class="stars">★★★★★</div>
       <p class="testi-text" data-i18n="testi3">"I'd been putting off life insurance for years. Grand Valor made it simple — done in 15 minutes and at a price that actually fit my budget."</p>
@@ -1833,17 +1883,40 @@ reviewBtn.addEventListener('click', () => {
 });
 
 /* =====================================================================
+   SCROLL REVEAL — fade/slide in cards as they enter the viewport
+===================================================================== */
+function initScrollReveal() {
+  const revealEls = document.querySelectorAll('.reveal');
+  if (!revealEls.length) return;
+  if (!('IntersectionObserver' in window)) {
+    revealEls.forEach(el => el.classList.add('in-view'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => io.observe(el));
+}
+
+/* =====================================================================
    INIT — apply language on load
 ===================================================================== */
 document.addEventListener('DOMContentLoaded', () => {
   setLanguage(currentLang);
   updateStepDisplay();
+  initScrollReveal();
 });
 
 // Fallback if DOMContentLoaded already fired
 if (document.readyState !== 'loading') {
   setLanguage(currentLang);
   updateStepDisplay();
+  initScrollReveal();
 }
 </script>
 
